@@ -85,6 +85,10 @@
             %button.commentBtn{name: "button", type: "submit"}
               %i.fa.fa-comment
               コメントする
+        .PurchaseBox
+          = form_with url: 'pay' do
+            :plain
+            <script type="text/javascript" src="https://checkout.pay.jp" class="payjp-button" data-key="pk_test_0cab5a53778ebb4cb97de57f"></script>
       %ul.links
         %li.left
           =link_to "#" do
