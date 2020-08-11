@@ -5,4 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   validates :nickname, presence: true, uniqueness: true
+
+  # コメントアウト解除するとsign_up画面でエラー発生します
+  # extend ActiveHash::Associations::ActiveRecordExtensions
+  # belongs_to_active_hash :prefecture
 end
