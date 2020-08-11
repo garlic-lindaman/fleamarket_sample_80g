@@ -5,7 +5,7 @@
 |------|----|-------|
 |card_number|integer|null:false|
 |expiration_year|integer|null:false|
-|expiration_monnth|integer|null:false|
+|expiration_month|integer|null:false|
 |security_code|integer|null:false|
 |user_id|references|null:false, foreign_key: true|
 ### Association
@@ -122,13 +122,13 @@
 |condition_id|references|null: false, foreign_key: true|
 |price|integer|null: false|
 |delivery_fee_id|references|null: false, foreign_key: true|
-|prefecture_code|integer|null: false|
+|prefecture_id|references|null: false, foreign_key: true|
 |preparation_day_id|references|null: false, foreign_key: true|
 |category_id|references|null: false, foreign_key: true|
 |size_id|references|null: false, foreign_key: true|
 |brand_id|references|foreign_key: true|
 |seller_id|references|null: false, foreign_key: true|
-|buyer_id|references|null: false, foreign_key: true|
+<!-- |buyer_id|references|foreign_key: true| ※ordersテーブルがあるので作ってません-->
 ### Association
 - belongs_to :user
 - belongs_to :category
@@ -140,9 +140,11 @@
 - has_one :order
 - belongs_to_active_hash: condition
 - belongs_to_active_hash: delivery_fee
+- belongs_to_active_hash: prefecture
 - belongs_to_active_hash: preparation_day
 - belongs_to_active_hash: category
 - belongs_to_active_hash: size
+
 
 ## todos
 |Column|Type|Options|
@@ -185,6 +187,14 @@
 |delivery_fee|string|null: false|
 ### Association
 - has_many :items
+
+## prefectures テーブル(active_hash)
+|Column|Type|Options|
+|------|----|-------|
+|prefecture|string|null: false|
+### Association
+- has_many :items
+- has_many :users
 
 ## preparation_days テーブル(active_hash)
 |Column|Type|Options|
