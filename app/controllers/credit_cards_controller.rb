@@ -13,6 +13,7 @@ class CreditCardsController < ApplicationController
     if params["payjp-token"].blank?
       redirect_to action: "new"
     else
+      # binding.pry
       customer = Payjp::Customer.create(
         email: current_user.email,
         card: params["payjp-token"],
