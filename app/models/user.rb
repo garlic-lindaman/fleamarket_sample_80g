@@ -2,10 +2,17 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   has_one :credit_card, dependent: :destroy
+  has_many :items
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   
+  class User < ActiveRecord::Base
+    has_many :bought_items, class_name: 'Item', foreign_key: 'buyer_id'
+    has_many :sold_items, class_name: 'Item', foreign_key: 'seller_id'
+  end
   
+
+
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: {with: VALID_EMAIL_REGEX, message: "＠とドメインを含む必要があります"}

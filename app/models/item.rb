@@ -1,5 +1,7 @@
 class Item < ApplicationRecord
-  has_many :item_images
+  has_many :comments, dependent: :destroy
+  has_many :item_images, dependent: :destroy
+  belongs_to :category
   accepts_nested_attributes_for :item_images, allow_destroy: true
   
   validates_associated :item_images
@@ -14,7 +16,7 @@ class Item < ApplicationRecord
   validates :preparation_day_id, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 300, less_than_or_equal_to: 9999999 }
   
-  belongs_to :category
+
 
   extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to_active_hash :prefecture
@@ -22,6 +24,11 @@ class Item < ApplicationRecord
   belongs_to_active_hash :delivery_fee
   belongs_to_active_hash :preparation_day
   belongs_to_active_hash :size
+
+  class Item < ActiveRecord::Base
+    belongs_to :buyer, class_name: "User", foreign_key: "buyer_id"
+    belongs_to :seller, class_name: "User", foreign_key: "seller_id"
+  end
 
   def self.search(search)
     if search != ""

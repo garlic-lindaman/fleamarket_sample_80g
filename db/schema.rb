@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_17_094828) do
+ActiveRecord::Schema.define(version: 2020_08_20_033217) do
 
   create_table "brands", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 255
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "category", null: false
-    t.string "ancestry"
+    t.string "category", limit: 255, null: false
+    t.string "ancestry", limit: 255
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ancestry"], name: "index_categories_on_ancestry"
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(version: 2020_08_17_094828) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_category_sizes_on_category_id"
     t.index ["size_id"], name: "index_category_sizes_on_size_id"
+  end
+
+  create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "item_id"
+    t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "credit_cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -64,14 +72,16 @@ ActiveRecord::Schema.define(version: 2020_08_17_094828) do
     t.integer "preparation_day_id", null: false
     t.integer "size_id"
     t.bigint "category_id", null: false
+    t.integer "seller_id"
+    t.integer "buyer_id"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
   create_table "sizes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "size"
+    t.string "size", limit: 255
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "ancestry"
+    t.string "ancestry", limit: 255
     t.index ["ancestry"], name: "index_sizes_on_ancestry"
   end
 

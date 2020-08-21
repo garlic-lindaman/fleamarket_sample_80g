@@ -1,16 +1,14 @@
 class ItemsController < ApplicationController
   before_action :move_to_index, except: [:index, :show, :search]
   before_action :category_parent_array, only: [:new, :create, :edit, :update]
+  before_action :set_item, only: [:show, :destroy]
   
   def index
     @items = Item.includes(:item_images).limit(3).order('created_at DESC')
-    # @items = Item.limit(5).order('created_at DESC')
-    # 画像は田中さんがマージしてから
-    # @ladies_items = Item.where(category: 2).includes(:images).order("created_at DESC").limit(5)
-    # ピックアップカテゴリー用
+    # レディース新着アイテムとメンズ新着アイテム
+    @ladies_items = Item.where(category: 159..346).includes(:item_images).limit(3).order("created_at DESC")
+    @mens_items = Item.where(category: 347..476).includes(:item_images).limit(3).order("created_at DESC")
   end
-  
-
   
   def new
     @item = Item.new
@@ -47,13 +45,15 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
     if @item.save
       redirect_to root_path
+      flash[:notice] = "商品を出品しました"
     else
       render :new
     end
   end
 
   def show
-    @item = Item.find(params[:id])
+    @comment = Comment.new
+    @comments = @item.comments.includes(:user)
     @category_grandchild = @item.category
     @category_child = @category_grandchild.parent
     @category_parent = @category_child.parent
@@ -61,6 +61,16 @@ class ItemsController < ApplicationController
   
   def search
     @search_items = Item.search(params[:key])
+  end
+
+  def destroy
+    if @item.destroy
+      redirect_to root_path
+      flash[:notice] = "商品を削除しました"
+    else
+      redirect_back(fallback_location: root_path)
+      flash[:alert] = "商品の削除に失敗しました"
+    end
   end
 
 
@@ -73,10 +83,15 @@ class ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:item).permit(:name, :price, :explanation, :category_id, :size_id, :item_condition_id, :prefecture_id, :delivery_fee_id, :preparation_day_id, item_images_attributes: [:src])
+    params.require(:item).permit(:name, :price, :explanation, :category_id, :size_id, :item_condition_id, :prefecture_id, :delivery_fee_id, :preparation_day_id, item_images_attributes: [:src]).merge(seller_id: current_user.id)
   end
 
   def category_parent_array
     @category_parent_array = Category.where(ancestry: nil)
   end
+
+  def set_item
+    @item = Item.find(params[:id])
+  end
+
 end

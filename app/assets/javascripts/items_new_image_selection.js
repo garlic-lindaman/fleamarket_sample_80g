@@ -1,4 +1,4 @@
-$(function(){
+$(document).on("turbolinks:load", function(){
   //DataTransferオブジェクトで、データを格納する箱を作る
   var dataBox = new DataTransfer();
   //querySelectorでfile_fieldを取得
@@ -55,7 +55,6 @@ $(function(){
       //inputタグに入ったファイルを削除
       $('input[type=file]').val(null)
       dataBox.clearData();
-      console.log(dataBox)
     }else{
       //プレビューが複数の場合
       $.each(file_field.files, function(i,input){
